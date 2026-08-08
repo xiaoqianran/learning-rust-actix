@@ -1,0 +1,29 @@
+# learning-rust-actix
+
+> Interactive Chinese course for Rust + actix-web: lessons, quizzes, simulated demos, REST studio.
+
+## Site
+- Home: /
+- Lessons: /lesson/{slug}
+- Docs map: /docs
+- Playground: /playground
+- Studio (mock REST): /studio
+- Cheatsheet: /cheatsheet
+- Hub: /hub
+- Lab: /lab
+- Certificate: /certificate
+
+## Tracks
+1. Rust basics (ownership, Result, async, Cargo, Serde)
+2. Actix intro (HttpServer, App, routes, handlers, scope)
+3. Extractors (Path, Query, Json, Data)
+4. Middleware & errors
+5. REST (CRUD, token, validation)
+6. Engineering (tests, env, deploy)
+7. Advanced (stream, websocket, security)
+8. Official reference cards
+
+## Official docs
+- https://actix.rs/docs/
+- https://docs.rs/actix-web/
+- https://doc.rust-lang.org/book/
