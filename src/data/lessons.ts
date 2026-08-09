@@ -64,10 +64,59 @@ export const LESSONS: Lesson[] = [
     summary: "系统级语言遇上高性能 Web 框架。",
     level: "入门",
     track: "Rust基础",
-    minutes: 8,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "为什么学这套组合", body: "Rust 提供内存安全与零成本抽象；actix-web 是基于 Actor 模型的高性能异步 HTTP 框架，在 TechEmpower 等基准中长期名列前茅。\n\n本站路径：先补齐 Rust 异步与错误处理直觉，再进 HttpServer / App / 提取器 / 中间件，最后在「工坊」用模拟 REST API 练登录与笔记 CRUD。" },
-      { type: "code", title: "最小 Actix 服务", lang: "rust", code: `use actix_web::{get, App, HttpServer, Responder};
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `Rust 提供内存安全与零成本抽象；actix-web 是基于 Actor 模型的高性能异步 HTTP 框架，在 TechEmpower 等基准中长期名列前茅。
+
+本站路径：先补齐 Rust 异步与错误处理直觉，再进 HttpServer / App / 提取器 / 中间件，最后在「工坊」用模拟 REST API 练登录与笔记 CRUD。
+
+为什么这一节重要：系统级语言遇上高性能 Web 框架。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「Rust + Actix 是什么」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「Rust + Actix 是什么」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「intro」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是Rust + Actix 是什么？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `use actix_web::{get, App, HttpServer, Responder};
 
 #[get("/")]
 async fn hello() -> impl Responder {
@@ -80,34 +129,48 @@ async fn main() -> std::io::Result<()> {
         .bind(("127.0.0.1", 8080))?
         .run()
         .await
-}` },
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：Rust + Actix 是什么
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "hello-world", title: "动手：Hello 请求路径" },
-      { type: "quiz", questions: [
-              {
-                      "id": "i1",
-                      "question": "Actix-web 主要定位？",
-                      "options": [
-                              "前端框架",
-                              "异步 HTTP 服务框架",
-                              "ORM",
-                              "包管理器"
-                      ],
-                      "answer": 1,
-                      "explain": "HTTP 服务端框架。"
-              },
-              {
-                      "id": "i2",
-                      "question": "最小服务需要？",
-                      "options": [
-                              "仅 main",
-                              "HttpServer + App + handler",
-                              "仅 React",
-                              "仅 Cargo.toml"
-                      ],
-                      "answer": 1,
-                      "explain": "三件套。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "intro-0b4b-1",
+            question: "关于「Rust + Actix 是什么」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "intro-0b4b-2",
+            question: "学习「Rust + Actix 是什么」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "intro-0b4b-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -118,8 +181,60 @@ async fn main() -> std::io::Result<()> {
     track: "Rust基础",
     minutes: 12,
     blocks: [
-      { type: "text", title: "所有权规则", body: "每个值有唯一 owner；owner 离开作用域即 drop。传参默认 move；用 &T / &mut T 借用。Web 服务里 handler 常常拿借用的 AppData、Path 字符串切片或 owned String。" },
-      { type: "code", title: "对应源码 · 移动与借用", lang: "rust", code: `fn takes_ownership(s: String) {
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `每个值有唯一 owner；owner 离开作用域即 drop。传参默认 move；用 &T / &mut T 借用。Web 服务里 handler 常常拿借用的 AppData、Path 字符串切片或 owned String。
+
+为什么这一节重要：移动、借用、生命周期直觉。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「所有权与借用」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "补充要点 1",
+        body: `在 handler 里优先用提取器得到 owned 数据（Path<String>、Json<T>），避免和请求生命周期纠缠。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「所有权与借用」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「ownership」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是所有权与借用？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `fn takes_ownership(s: String) {
     println!("{s}");
 } // s drop
 
@@ -132,35 +247,48 @@ fn main() {
     borrows(&name);           // 借用，name 仍可用
     takes_ownership(name);    // move
     // println!("{name}");    // 编译错误
-}` },
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：所有权与借用
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "ownership", title: "动手：所有权可视化" },
-      { type: "tip", body: "在 handler 里优先用提取器得到 owned 数据（Path<String>、Json<T>），避免和请求生命周期纠缠。" },
-      { type: "quiz", questions: [
-              {
-                      "id": "o1",
-                      "question": "默认传 String 参数？",
-                      "options": [
-                              "复制",
-                              "移动 ownership",
-                              "永远借用",
-                              "泄漏"
-                      ],
-                      "answer": 1,
-                      "explain": "move。"
-              },
-              {
-                      "id": "o2",
-                      "question": "只读借用写法？",
-                      "options": [
-                              "*T",
-                              "&T",
-                              "mut T",
-                              "Box<T>"
-                      ],
-                      "answer": 1,
-                      "explain": "&T。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "ownership-b46b-1",
+            question: "关于「所有权与借用」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "ownership-b46b-2",
+            question: "学习「所有权与借用」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "ownership-b46b-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -169,10 +297,57 @@ fn main() {
     summary: "错误传播是 Web 的日常。",
     level: "入门",
     track: "Rust基础",
-    minutes: 10,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "Result 是一等公民", body: "Rust 没有异常栈展开；可恢复错误用 Result<T, E>。? 运算符在函数返回 Result 时把 Err 提前返回。Actix handler 可返回 Result<impl Responder, Error>。" },
-      { type: "code", title: "对应源码 · ? 传播", lang: "rust", code: `use actix_web::{web, HttpResponse, Result};
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `Rust 没有异常栈展开；可恢复错误用 Result<T, E>。? 运算符在函数返回 Result 时把 Err 提前返回。Actix handler 可返回 Result<impl Responder, Error>。
+
+为什么这一节重要：错误传播是 Web 的日常。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「类型、Result 与 ?」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「类型、Result 与 ?」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「types-result」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是类型、Result 与 ?？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `use actix_web::{web, HttpResponse, Result};
 
 async fn user(path: web::Path<u32>) -> Result<HttpResponse> {
     let id = path.into_inner();
@@ -180,34 +355,48 @@ async fn user(path: web::Path<u32>) -> Result<HttpResponse> {
         return Ok(HttpResponse::BadRequest().body("invalid id"));
     }
     Ok(HttpResponse::Ok().json(serde_json::json!({ "id": id })))
-}` },
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：类型、Result 与 ?
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "result-error", title: "动手：Result 分支" },
-      { type: "quiz", questions: [
-              {
-                      "id": "r1",
-                      "question": "? 用在？",
-                      "options": [
-                              "返回 Result/Option 的函数",
-                              "任意函数",
-                              "仅 main",
-                              "仅宏"
-                      ],
-                      "answer": 0,
-                      "explain": "错误传播。"
-              },
-              {
-                      "id": "r2",
-                      "question": "Actix handler 错误常返回？",
-                      "options": [
-                              "panic",
-                              "Result + Error",
-                              "null",
-                              "undefined"
-                      ],
-                      "answer": 1,
-                      "explain": "类型化错误。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "types-result-eebf-1",
+            question: "关于「类型、Result 与 ?」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "types-result-eebf-2",
+            question: "学习「类型、Result 与 ?」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "types-result-eebf-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -218,8 +407,55 @@ async fn user(path: web::Path<u32>) -> Result<HttpResponse> {
     track: "Rust基础",
     minutes: 12,
     blocks: [
-      { type: "text", title: "异步不阻塞线程", body: "async fn 返回 Future；.await 在等待 IO 时让出执行权。actix-web 内置/集成 tokio 运行时；入口常用 #[actix_web::main]。不要在 async 里做重 CPU 阻塞，应 spawn_blocking。" },
-      { type: "code", title: "对应源码 · 异步 handler", lang: "rust", code: `use actix_web::{get, web, Responder};
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `async fn 返回 Future；.await 在等待 IO 时让出执行权。actix-web 内置/集成 tokio 运行时；入口常用 #[actix_web::main]。不要在 async 里做重 CPU 阻塞，应 spawn_blocking。
+
+为什么这一节重要：Future、.await、#[actix_web::main]。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「async / await 与运行时」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「async / await 与运行时」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「async-await」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是async / await 与运行时？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `use actix_web::{get, web, Responder};
 use std::time::Duration;
 
 #[get("/slow")]
@@ -227,34 +463,48 @@ async fn slow() -> impl Responder {
     // 模拟 IO
     tokio::time::sleep(Duration::from_millis(50)).await;
     "done"
-}` },
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：async / await 与运行时
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "async-await", title: "动手：并发等待" },
-      { type: "quiz", questions: [
-              {
-                      "id": "a1",
-                      "question": ".await 作用？",
-                      "options": [
-                              "开新线程必用",
-                              "等待 Future 完成",
-                              "编译成同步",
-                              "仅循环"
-                      ],
-                      "answer": 1,
-                      "explain": "轮询 Future。"
-              },
-              {
-                      "id": "a2",
-                      "question": "Actix 入口宏？",
-                      "options": [
-                              "#[tokio::test] only",
-                              "#[actix_web::main]",
-                              "#[sync]",
-                              "fn main 禁止 async"
-                      ],
-                      "answer": 1,
-                      "explain": "启动运行时。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "async-await-2214-1",
+            question: "关于「async / await 与运行时」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "async-await-2214-2",
+            question: "学习「async / await 与运行时」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "async-await-2214-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -263,10 +513,57 @@ async fn slow() -> impl Responder {
     summary: "crate、mod、依赖声明。",
     level: "入门",
     track: "Rust基础",
-    minutes: 8,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "工程骨架", body: "cargo new --bin api 创建二进制 crate。Cargo.toml 声明 actix-web、serde、serde_json 等。用 mod 拆 handlers / models / middleware，lib.rs 或 main.rs 组织模块树。" },
-      { type: "code", title: "Cargo.toml 片段", lang: "rust", code: `[package]
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `cargo new --bin api 创建二进制 crate。Cargo.toml 声明 actix-web、serde、serde_json 等。用 mod 拆 handlers / models / middleware，lib.rs 或 main.rs 组织模块树。
+
+为什么这一节重要：crate、mod、依赖声明。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「Cargo 与模块」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「Cargo 与模块」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「cargo-mod」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是Cargo 与模块？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `[package]
 name = "learning-api"
 version = "0.1.0"
 edition = "2021"
@@ -276,34 +573,48 @@ actix-web = "4"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 env_logger = "0.11"
-log = "0.4"` },
+log = "0.4"`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：Cargo 与模块
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "config", title: "动手：依赖与模块树" },
-      { type: "quiz", questions: [
-              {
-                      "id": "c1",
-                      "question": "添加依赖写在？",
-                      "options": [
-                              "main.rs",
-                              "Cargo.toml",
-                              "package.json",
-                              ".env"
-                      ],
-                      "answer": 1,
-                      "explain": "Cargo.toml。"
-              },
-              {
-                      "id": "c2",
-                      "question": "子模块关键字？",
-                      "options": [
-                              "import",
-                              "mod",
-                              "package",
-                              "use only"
-                      ],
-                      "answer": 1,
-                      "explain": "mod。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "cargo-mod-12b4-1",
+            question: "关于「Cargo 与模块」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "cargo-mod-12b4-2",
+            question: "学习「Cargo 与模块」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "cargo-mod-12b4-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -312,10 +623,57 @@ log = "0.4"` },
     summary: "Serialize / Deserialize 是 API 标配。",
     level: "入门",
     track: "Rust基础",
-    minutes: 10,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "为什么需要 Serde", body: "HTTP 边界上的 JSON 与 Rust 结构体互转靠 serde。derive(Serialize, Deserialize) 后即可 web::Json<T> 提取与 .json() 响应。" },
-      { type: "code", title: "对应源码 · 结构体 JSON", lang: "rust", code: `use serde::{Deserialize, Serialize};
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `HTTP 边界上的 JSON 与 Rust 结构体互转靠 serde。derive(Serialize, Deserialize) 后即可 web::Json<T> 提取与 .json() 响应。
+
+为什么这一节重要：Serialize / Deserialize 是 API 标配。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「Serde 与 JSON」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「Serde 与 JSON」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「serde-json」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是Serde 与 JSON？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct CreateNote {
@@ -328,34 +686,48 @@ struct Note {
     id: u64,
     title: String,
     body: String,
-}` },
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：Serde 与 JSON
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "json-body", title: "动手：JSON 往返" },
-      { type: "quiz", questions: [
-              {
-                      "id": "s1",
-                      "question": "自动序列化靠？",
-                      "options": [
-                              "手写 to_string",
-                              "serde derive",
-                              "反射运行时",
-                              "only Gson"
-                      ],
-                      "answer": 1,
-                      "explain": "serde。"
-              },
-              {
-                      "id": "s2",
-                      "question": "请求体 JSON 提取器？",
-                      "options": [
-                              "web::Path",
-                              "web::Json<T>",
-                              "web::Data",
-                              "HttpRequest only"
-                      ],
-                      "answer": 1,
-                      "explain": "web::Json。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "serde-json-68a9-1",
+            question: "关于「Serde 与 JSON」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "serde-json-68a9-2",
+            question: "学习「Serde 与 JSON」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "serde-json-68a9-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -364,44 +736,105 @@ struct Note {
     summary: "进程、worker、bind/run。",
     level: "入门",
     track: "Actix入门",
-    minutes: 10,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "HttpServer 职责", body: "HttpServer::new 接受闭包，每个 worker 线程克隆一份 App 工厂。bind 地址后 run().await 阻塞服务。生产可 workers(n)、keep_alive、client_request_timeout。" },
-      { type: "code", title: "对应源码 · 服务器配置", lang: "rust", code: `HttpServer::new(|| {
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `HttpServer::new 接受闭包，每个 worker 线程克隆一份 App 工厂。bind 地址后 run().await 阻塞服务。生产可 workers(n)、keep_alive、client_request_timeout。
+
+为什么这一节重要：进程、worker、bind/run。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「HttpServer 与绑定」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「HttpServer 与绑定」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「httpserver」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是HttpServer 与绑定？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `HttpServer::new(|| {
     App::new()
         .route("/health", web::get().to(|| async { "ok" }))
 })
 .bind(("0.0.0.0", 8080))?
 .workers(4)
 .run()
-.await` },
+.await`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：HttpServer 与绑定
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "httpserver", title: "动手：绑定与 worker" },
-      { type: "quiz", questions: [
-              {
-                      "id": "h1",
-                      "question": "App 工厂为什么是闭包？",
-                      "options": [
-                              "好看",
-                              "每 worker 独立 App 实例",
-                              "仅编译用",
-                              "禁用并发"
-                      ],
-                      "answer": 1,
-                      "explain": "多 worker 隔离。"
-              },
-              {
-                      "id": "h2",
-                      "question": "bind 失败返回？",
-                      "options": [
-                              "()",
-                              "io::Error via ?",
-                              "panic 必现",
-                              "true"
-                      ],
-                      "answer": 1,
-                      "explain": "Result。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "httpserver-7dd4-1",
+            question: "关于「HttpServer 与绑定」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "httpserver-7dd4-2",
+            question: "学习「HttpServer 与绑定」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "httpserver-7dd4-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -412,8 +845,55 @@ struct Note {
     track: "Actix入门",
     minutes: 12,
     blocks: [
-      { type: "text", title: "三种注册方式", body: "1) #[get]/path\")] + .service(handler)  2) .route(path, method.to(fn))  3) web::resource(...).route(...)。路径支持 {id} 动态段。" },
-      { type: "code", title: "对应源码 · 路由表", lang: "rust", code: `use actix_web::{get, post, web, App, HttpResponse};
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `1) #[get]/path\\")] + .service(handler)  2) .route(path, method.to(fn))  3) web::resource(...).route(...)。路径支持 {id} 动态段。
+
+为什么这一节重要：route / service / resource。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「App 与路由注册」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「App 与路由注册」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「app-routes」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是App 与路由注册？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `use actix_web::{get, post, web, App, HttpResponse};
 
 #[get("/hello/{name}")]
 async fn greet(name: web::Path<String>) -> String {
@@ -428,34 +908,48 @@ async fn echo(body: String) -> impl actix_web::Responder {
 App::new()
     .service(greet)
     .service(echo)
-    .route("/ping", web::get().to(|| async { HttpResponse::Ok().body("pong") }))` },
+    .route("/ping", web::get().to(|| async { HttpResponse::Ok().body("pong") }))`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：App 与路由注册
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "app-routes", title: "动手：路由匹配" },
-      { type: "quiz", questions: [
-              {
-                      "id": "ar1",
-                      "question": "动态段写法？",
-                      "options": [
-                              ":id",
-                              "{id}",
-                              "<id>",
-                              "$id"
-                      ],
-                      "answer": 1,
-                      "explain": "{id}。"
-              },
-              {
-                      "id": "ar2",
-                      "question": "#[get] handler 注册用？",
-                      "options": [
-                              ".data",
-                              ".service",
-                              ".wrap only",
-                              ".app_data only"
-                      ],
-                      "answer": 1,
-                      "explain": ".service。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "app-routes-4c2e-1",
+            question: "关于「App 与路由注册」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "app-routes-4c2e-2",
+            question: "学习「App 与路由注册」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "app-routes-4c2e-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -464,10 +958,57 @@ App::new()
     summary: "async fn 返回什么都能响应？",
     level: "入门",
     track: "Actix入门",
-    minutes: 10,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "Responder trait", body: "impl Responder 的类型可直接返回：&'static str、String、HttpResponse、Json<T> 等。复杂逻辑用 HttpResponse::build。Handler 可以是 async fn，由框架轮询 Future。" },
-      { type: "code", title: "对应源码 · 多种响应", lang: "rust", code: `use actix_web::{web, HttpResponse, Responder};
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `impl Responder 的类型可直接返回：&'static str、String、HttpResponse、Json<T> 等。复杂逻辑用 HttpResponse::build。Handler 可以是 async fn，由框架轮询 Future。
+
+为什么这一节重要：async fn 返回什么都能响应？不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「Handler 与 Responder」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「Handler 与 Responder」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「handlers」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是Handler 与 Responder？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `use actix_web::{web, HttpResponse, Responder};
 use serde::Serialize;
 
 #[derive(Serialize)]
@@ -479,34 +1020,48 @@ async fn health() -> impl Responder {
 
 async fn not_found() -> HttpResponse {
     HttpResponse::NotFound().body("missing")
-}` },
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：Handler 与 Responder
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "responders", title: "动手：Responder 类型" },
-      { type: "quiz", questions: [
-              {
-                      "id": "hd1",
-                      "question": "返回 JSON 便捷类型？",
-                      "options": [
-                              "web::Json(T)",
-                              "Vec<u8> only",
-                              "File",
-                              "Socket"
-                      ],
-                      "answer": 0,
-                      "explain": "web::Json。"
-              },
-              {
-                      "id": "hd2",
-                      "question": "404 手动构造？",
-                      "options": [
-                              "HttpResponse::NotFound()",
-                              "return null",
-                              "throw",
-                              "None"
-                      ],
-                      "answer": 0,
-                      "explain": "状态码构建器。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "handlers-7c0b-1",
+            question: "关于「Handler 与 Responder」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "handlers-7c0b-2",
+            question: "学习「Handler 与 Responder」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "handlers-7c0b-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -515,10 +1070,57 @@ async fn not_found() -> HttpResponse {
     summary: "前缀分组与细粒度方法。",
     level: "进阶",
     track: "Actix入门",
-    minutes: 10,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "模块化路由", body: "web::scope(\"/api\") 给一组路由加前缀；web::resource(\"/notes/{id}\") 上挂 GET/PUT/DELETE。适合版本化 API：/api/v1。" },
-      { type: "code", title: "对应源码 · scope", lang: "rust", code: `use actix_web::{web, App, HttpResponse};
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `web::scope(\\"/api\\") 给一组路由加前缀；web::resource(\\"/notes/{id}\\") 上挂 GET/PUT/DELETE。适合版本化 API：/api/v1。
+
+为什么这一节重要：前缀分组与细粒度方法。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「Scope 与 Resource」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「Scope 与 Resource」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「scope-resource」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是Scope 与 Resource？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `use actix_web::{web, App, HttpResponse};
 
 fn api_config(cfg: &mut web::ServiceConfig) {
     cfg.service(
@@ -535,34 +1137,48 @@ async fn del_note(id: web::Path<u64>) -> HttpResponse {
     HttpResponse::NoContent().finish()
 }
 
-App::new().service(web::scope("/api/v1").configure(api_config))` },
+App::new().service(web::scope("/api/v1").configure(api_config))`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：Scope 与 Resource
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "scope-resource", title: "动手：/api 前缀" },
-      { type: "quiz", questions: [
-              {
-                      "id": "sc1",
-                      "question": "统一前缀用？",
-                      "options": [
-                              "web::scope",
-                              "only macro",
-                              "Html",
-                              "cookie"
-                      ],
-                      "answer": 0,
-                      "explain": "scope。"
-              },
-              {
-                      "id": "sc2",
-                      "question": "同一路径多方法挂在？",
-                      "options": [
-                              "resource",
-                              "middleware only",
-                              "main",
-                              "logger"
-                      ],
-                      "answer": 0,
-                      "explain": "resource。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "scope-resource-c77b-1",
+            question: "关于「Scope 与 Resource」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "scope-resource-c77b-2",
+            question: "学习「Scope 与 Resource」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "scope-resource-c77b-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -571,10 +1187,57 @@ App::new().service(web::scope("/api/v1").configure(api_config))` },
     summary: "从请求里「声明式」拿数据。",
     level: "入门",
     track: "请求提取",
-    minutes: 10,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "FromRequest", body: "Handler 参数实现 FromRequest 即可自动提取：Path、Query、Json、Form、Data、HttpRequest、Bytes… 失败时框架返回对应错误响应（如 400）。顺序：先提路径/查询，再提 body。" },
-      { type: "code", title: "对应源码 · 多提取器", lang: "rust", code: `use actix_web::{web, HttpResponse, Result};
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `Handler 参数实现 FromRequest 即可自动提取：Path、Query、Json、Form、Data、HttpRequest、Bytes… 失败时框架返回对应错误响应（如 400）。顺序：先提路径/查询，再提 body。
+
+为什么这一节重要：从请求里「声明式」拿数据。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「提取器总览」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「提取器总览」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「extractors-intro」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是提取器总览？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `use actix_web::{web, HttpResponse, Result};
 
 #[derive(serde::Deserialize)]
 struct Page { page: u32, size: u32 }
@@ -588,34 +1251,48 @@ async fn list(
         "{topic} page={} size={}",
         q.page, q.size
     )))
-}` },
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：提取器总览
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "extractors", title: "动手：提取器流水线" },
-      { type: "quiz", questions: [
-              {
-                      "id": "e1",
-                      "question": "提取器 trait？",
-                      "options": [
-                              "Responder",
-                              "FromRequest",
-                              "Service",
-                              "Future only"
-                      ],
-                      "answer": 1,
-                      "explain": "FromRequest。"
-              },
-              {
-                      "id": "e2",
-                      "question": "Query 绑定？",
-                      "options": [
-                              "web::Query<T>",
-                              "web::Data",
-                              "Path only",
-                              "Header 必手写"
-                      ],
-                      "answer": 0,
-                      "explain": "Query。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "extractors-intro-c26d-1",
+            question: "关于「提取器总览」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "extractors-intro-c26d-2",
+            question: "学习「提取器总览」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "extractors-intro-c26d-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -624,10 +1301,57 @@ async fn list(
     summary: "路径参数与查询字符串。",
     level: "入门",
     track: "请求提取",
-    minutes: 10,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "类型安全的参数", body: "web::Path<u32> 自动解析失败→400。多段用元组或结构体。web::Query<T> 需 Deserialize。" },
-      { type: "code", title: "对应源码", lang: "rust", code: `#[derive(serde::Deserialize)]
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `web::Path<u32> 自动解析失败→400。多段用元组或结构体。web::Query<T> 需 Deserialize。
+
+为什么这一节重要：路径参数与查询字符串。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「Path 与 Query」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「Path 与 Query」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「path-query」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是Path 与 Query？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `#[derive(serde::Deserialize)]
 struct Search { q: String, limit: Option<u32> }
 
 async fn item(
@@ -636,34 +1360,48 @@ async fn item(
 ) -> String {
     let (id, kind) = path.into_inner();
     format!("id={id} kind={kind} q={} limit={:?}", query.q, query.limit)
-}` },
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：Path 与 Query
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "path-query", title: "动手：改 Path / Query" },
-      { type: "quiz", questions: [
-              {
-                      "id": "pq1",
-                      "question": "Path 解析失败？",
-                      "options": [
-                              "500 默认",
-                              "通常 400",
-                              "静默 200",
-                              "重定向"
-                      ],
-                      "answer": 1,
-                      "explain": "客户端错误。"
-              },
-              {
-                      "id": "pq2",
-                      "question": "可选查询字段？",
-                      "options": [
-                              "必须 String",
-                              "Option<T>",
-                              "禁止",
-                              "only i32"
-                      ],
-                      "answer": 1,
-                      "explain": "Option。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "path-query-eba5-1",
+            question: "关于「Path 与 Query」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "path-query-eba5-2",
+            question: "学习「Path 与 Query」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "path-query-eba5-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -672,10 +1410,57 @@ async fn item(
     summary: "Body 反序列化。",
     level: "进阶",
     track: "请求提取",
-    minutes: 10,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "Body 提取一次", body: "请求体只能消费一次。web::Json<T> 读 application/json；web::Form<T> 读 urlencoded。大 body 注意 JsonConfig::limit。" },
-      { type: "code", title: "对应源码 · POST JSON", lang: "rust", code: `use actix_web::{post, web, HttpResponse, Result};
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `请求体只能消费一次。web::Json<T> 读 application/json；web::Form<T> 读 urlencoded。大 body 注意 JsonConfig::limit。
+
+为什么这一节重要：Body 反序列化。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「Json 与 Form」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「Json 与 Form」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「json-form」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是Json 与 Form？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `use actix_web::{post, web, HttpResponse, Result};
 
 #[derive(serde::Deserialize)]
 struct Login { email: String, password: String }
@@ -689,34 +1474,48 @@ async fn login(body: web::Json<Login>) -> Result<HttpResponse> {
         "token": "demo-token",
         "email": body.email,
     })))
-}` },
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：Json 与 Form
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "json-body", title: "动手：POST JSON" },
-      { type: "quiz", questions: [
-              {
-                      "id": "jf1",
-                      "question": "JSON body 提取？",
-                      "options": [
-                              "web::Json<T>",
-                              "web::Path",
-                              "Query",
-                              "Data"
-                      ],
-                      "answer": 0,
-                      "explain": "Json。"
-              },
-              {
-                      "id": "jf2",
-                      "question": "body 能提取两次吗？",
-                      "options": [
-                              "能",
-                              "通常不能（已消费）",
-                              "必须两次",
-                              "仅 HTTPS 能"
-                      ],
-                      "answer": 1,
-                      "explain": "流已读完。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "json-form-9b67-1",
+            question: "关于「Json 与 Form」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "json-form-9b67-2",
+            question: "学习「Json 与 Form」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "json-form-9b67-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -727,8 +1526,55 @@ async fn login(body: web::Json<Login>) -> Result<HttpResponse> {
     track: "请求提取",
     minutes: 12,
     blocks: [
-      { type: "text", title: "Data<T> = Arc 包装", body: "HttpServer 多 worker 时每 worker 有自己的 App 状态克隆；用 Arc<Mutex<_>> / Arc<RwLock<_>> 或外部连接池做真共享。app_data(Data::new(state)) 注册，handler 取 Data<T>。" },
-      { type: "code", title: "对应源码 · 计数器状态", lang: "rust", code: `use actix_web::{web, App, HttpServer};
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `HttpServer 多 worker 时每 worker 有自己的 App 状态克隆；用 Arc<Mutex<_>> / Arc<RwLock<_>> 或外部连接池做真共享。app_data(Data::new(state)) 注册，handler 取 Data<T>。
+
+为什么这一节重要：App 级状态与 handler 注入。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「web::Data 共享状态」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「web::Data 共享状态」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「app-data」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是web::Data 共享状态？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `use actix_web::{web, App, HttpServer};
 use std::sync::Mutex;
 
 struct AppState {
@@ -745,35 +1591,48 @@ HttpServer::new(|| {
     App::new()
         .app_data(web::Data::new(AppState { hits: Mutex::new(0) }))
         .route("/hit", web::post().to(hit))
-})` },
+})`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：web::Data 共享状态
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "app-data", title: "动手：共享计数" },
-      { type: "tip", body: "数据库连接池（sqlx::PgPool）典型做法：Data<Pool> 注入。" },
-      { type: "quiz", questions: [
-              {
-                      "id": "ad1",
-                      "question": "Data 内部通常？",
-                      "options": [
-                              "Rc only",
-                              "Arc 语义",
-                              "裸指针",
-                              "全局 static 必用"
-                      ],
-                      "answer": 1,
-                      "explain": "Arc。"
-              },
-              {
-                      "id": "ad2",
-                      "question": "注册方法？",
-                      "options": [
-                              ".app_data",
-                              ".service only",
-                              ".wrap",
-                              ".route only"
-                      ],
-                      "answer": 0,
-                      "explain": "app_data。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "app-data-1ddc-1",
+            question: "关于「web::Data 共享状态」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "app-data-1ddc-2",
+            question: "学习「web::Data 共享状态」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "app-data-1ddc-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -782,10 +1641,57 @@ HttpServer::new(|| {
     summary: "底层访问仍可用。",
     level: "进阶",
     track: "请求提取",
-    minutes: 8,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "何时摸底层", body: "大多数场景用提取器；需要原始头、连接信息时注入 HttpRequest 或 web::Header。" },
-      { type: "code", title: "对应源码", lang: "rust", code: `use actix_web::{HttpRequest, HttpResponse};
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `大多数场景用提取器；需要原始头、连接信息时注入 HttpRequest 或 web::Header。
+
+为什么这一节重要：底层访问仍可用。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「请求头与 HttpRequest」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「请求头与 HttpRequest」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「headers-req」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是请求头与 HttpRequest？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `use actix_web::{HttpRequest, HttpResponse};
 
 async fn who(req: HttpRequest) -> HttpResponse {
     let ua = req
@@ -794,22 +1700,48 @@ async fn who(req: HttpRequest) -> HttpResponse {
         .and_then(|v| v.to_str().ok())
         .unwrap_or("unknown");
     HttpResponse::Ok().body(format!("ua={ua}"))
-}` },
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：请求头与 HttpRequest
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "extractors", title: "动手：读 User-Agent", hint: "在提取器面板查看 headers" },
-      { type: "quiz", questions: [
-              {
-                      "id": "hr1",
-                      "question": "读头推荐？",
-                      "options": [
-                              "永远字符串拆",
-                              "headers().get",
-                              "仅 Query",
-                              "禁止"
-                      ],
-                      "answer": 1,
-                      "explain": "HeaderMap。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "headers-req-45ed-1",
+            question: "关于「请求头与 HttpRequest」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "headers-req-45ed-2",
+            question: "学习「请求头与 HttpRequest」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "headers-req-45ed-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -820,40 +1752,101 @@ async fn who(req: HttpRequest) -> HttpResponse {
     track: "中间件状态",
     minutes: 12,
     blocks: [
-      { type: "text", title: "洋葱模型", body: ".wrap(A).wrap(B) 时，请求先过外层。Logger、Compress、DefaultHeaders、Cors、自定义鉴权都是中间件。Transform trait 可自定义。" },
-      { type: "code", title: "对应源码 · Logger + 默认头", lang: "rust", code: `use actix_web::{middleware, App, HttpServer};
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `.wrap(A).wrap(B) 时，请求先过外层。Logger、Compress、DefaultHeaders、Cors、自定义鉴权都是中间件。Transform trait 可自定义。
+
+为什么这一节重要：wrap 顺序与请求/响应钩子。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「中间件链」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「中间件链」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「middleware」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是中间件链？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `use actix_web::{middleware, App, HttpServer};
 
 App::new()
     .wrap(middleware::Logger::default())
     .wrap(middleware::DefaultHeaders::new().add(("X-Version", "1")))
-    .wrap(middleware::Compress::default())` },
+    .wrap(middleware::Compress::default())`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：中间件链
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "middleware", title: "动手：中间件洋葱" },
-      { type: "quiz", questions: [
-              {
-                      "id": "mw1",
-                      "question": "注册中间件？",
-                      "options": [
-                              ".wrap",
-                              ".service",
-                              ".data",
-                              ".bind"
-                      ],
-                      "answer": 0,
-                      "explain": "wrap。"
-              },
-              {
-                      "id": "mw2",
-                      "question": "Logger 作用？",
-                      "options": [
-                              "写数据库",
-                              "访问日志",
-                              "编译优化",
-                              "TLS"
-                      ],
-                      "answer": 1,
-                      "explain": "请求日志。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "middleware-b200-1",
+            question: "关于「中间件链」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "middleware-b200-2",
+            question: "学习「中间件链」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "middleware-b200-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -864,8 +1857,55 @@ App::new()
     track: "中间件状态",
     minutes: 12,
     blocks: [
-      { type: "text", title: "模式", body: "中间件读 Authorization，校验后把 UserId 插入 extensions，下游 handler 提取；失败返回 401。也可用提取器封装鉴权。工坊里用模拟 Bearer 练同一心智模型。" },
-      { type: "code", title: "对应源码 · 伪代码", lang: "rust", code: `// 中间件伪代码
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `中间件读 Authorization，校验后把 UserId 插入 extensions，下游 handler 提取；失败返回 401。也可用提取器封装鉴权。工坊里用模拟 Bearer 练同一心智模型。
+
+为什么这一节重要：Bearer Token 校验模式。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「鉴权中间件思路」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「鉴权中间件思路」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「auth-mw」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是鉴权中间件思路？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `// 中间件伪代码
 // 1. 读 Authorization: Bearer <token>
 // 2. 查 token → user
 // 3. req.extensions_mut().insert(user);
@@ -874,34 +1914,48 @@ App::new()
 
 async fn me(user: web::ReqData<User>) -> impl Responder {
     web::Json(user.into_inner())
-}` },
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：鉴权中间件思路
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "auth-middleware", title: "动手：401 vs 200" },
-      { type: "quiz", questions: [
-              {
-                      "id": "au1",
-                      "question": "未登录 REST 常见状态码？",
-                      "options": [
-                              "200",
-                              "401",
-                              "301",
-                              "204"
-                      ],
-                      "answer": 1,
-                      "explain": "Unauthorized。"
-              },
-              {
-                      "id": "au2",
-                      "question": "下游拿用户？",
-                      "options": [
-                              "extensions / ReqData",
-                              "仅全局变量",
-                              "query 明文密码",
-                              "强制 cookie 名"
-                      ],
-                      "answer": 0,
-                      "explain": "扩展数据。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "auth-mw-d36e-1",
+            question: "关于「鉴权中间件思路」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "auth-mw-d36e-2",
+            question: "学习「鉴权中间件思路」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "auth-mw-d36e-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -910,10 +1964,57 @@ async fn me(user: web::ReqData<User>) -> impl Responder {
     summary: "ResponseError 与统一 JSON 错误。",
     level: "进阶",
     track: "中间件状态",
-    minutes: 10,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "自定义错误类型", body: "实现 ResponseError 让 ? 自动变成正确状态码与 body。统一 {\"message\":...} 方便前端。" },
-      { type: "code", title: "对应源码 · ResponseError", lang: "rust", code: `use actix_web::{HttpResponse, ResponseError};
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `实现 ResponseError 让 ? 自动变成正确状态码与 body。统一 {\\"message\\":...} 方便前端。
+
+为什么这一节重要：ResponseError 与统一 JSON 错误。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「错误处理」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「错误处理」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「error-handling」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是错误处理？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `use actix_web::{HttpResponse, ResponseError};
 use std::fmt;
 
 #[derive(Debug)]
@@ -938,22 +2039,48 @@ impl ResponseError for ApiError {
             Self::Unauthorized => HttpResponse::Unauthorized().json(serde_json::json!({"message":"unauthorized"})),
         }
     }
-}` },
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：错误处理
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "result-error", title: "动手：错误映射" },
-      { type: "quiz", questions: [
-              {
-                      "id": "eh1",
-                      "question": "自定义错误响应实现？",
-                      "options": [
-                              "Responder only",
-                              "ResponseError",
-                              "Drop",
-                              "Copy"
-                      ],
-                      "answer": 1,
-                      "explain": "ResponseError。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "error-handling-c213-1",
+            question: "关于「错误处理」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "error-handling-c213-2",
+            question: "学习「错误处理」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "error-handling-c213-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -962,10 +2089,57 @@ impl ResponseError for ApiError {
     summary: "浏览器跨域与可观测性。",
     level: "进阶",
     track: "中间件状态",
-    minutes: 8,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "前后端分离", body: "actix-cors 配置允许的 origin/method/header。日志用 env_logger + middleware::Logger，RUST_LOG=info。" },
-      { type: "code", title: "对应源码", lang: "rust", code: `use actix_cors::Cors;
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `actix-cors 配置允许的 origin/method/header。日志用 env_logger + middleware::Logger，RUST_LOG=info。
+
+为什么这一节重要：浏览器跨域与可观测性。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「CORS 与日志」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「CORS 与日志」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「cors-logging」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是CORS 与日志？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `use actix_cors::Cors;
 use actix_web::middleware::Logger;
 
 App::new()
@@ -976,22 +2150,48 @@ App::new()
             .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
             .allow_any_header()
             .max_age(3600),
-    )` },
+    )`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：CORS 与日志
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "logging", title: "动手：日志级别" },
-      { type: "quiz", questions: [
-              {
-                      "id": "cl1",
-                      "question": "浏览器跨域靠？",
-                      "options": [
-                              "仅 VPN",
-                              "CORS 头",
-                              "DNS",
-                              "gzip"
-                      ],
-                      "answer": 1,
-                      "explain": "CORS。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "cors-logging-da3c-1",
+            question: "关于「CORS 与日志」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "cors-logging-da3c-2",
+            question: "学习「CORS 与日志」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "cors-logging-da3c-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1000,41 +2200,102 @@ App::new()
     summary: "名词资源 + HTTP 动词。",
     level: "实战",
     track: "REST实战",
-    minutes: 10,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "约定", body: "GET 安全幂等；POST 创建；PUT/PATCH 更新；DELETE 删除。用复数名词 /api/notes、/api/notes/{id}。状态码：201 Created、204 No Content、404、401、422。" },
-      { type: "code", title: "路由草图", lang: "rust", code: `// GET    /api/notes
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `GET 安全幂等；POST 创建；PUT/PATCH 更新；DELETE 删除。用复数名词 /api/notes、/api/notes/{id}。状态码：201 Created、204 No Content、404、401、422。
+
+为什么这一节重要：名词资源 + HTTP 动词。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「REST 资源设计」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「REST 资源设计」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「rest-design」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是REST 资源设计？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `// GET    /api/notes
 // POST   /api/notes
 // GET    /api/notes/{id}
 // PUT    /api/notes/{id}
-// DELETE /api/notes/{id}` },
+// DELETE /api/notes/{id}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：REST 资源设计
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "challenge", title: "动手：点选正确方法" },
-      { type: "quiz", questions: [
-              {
-                      "id": "rd1",
-                      "question": "创建资源方法？",
-                      "options": [
-                              "GET",
-                              "POST",
-                              "TRACE",
-                              "OPTIONS only"
-                      ],
-                      "answer": 1,
-                      "explain": "POST。"
-              },
-              {
-                      "id": "rd2",
-                      "question": "删除成功常见？",
-                      "options": [
-                              "200/204",
-                              "201",
-                              "302",
-                              "100"
-                      ],
-                      "answer": 0,
-                      "explain": "204 无 body 常见。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "rest-design-ad76-1",
+            question: "关于「REST 资源设计」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "rest-design-ad76-2",
+            question: "学习「REST 资源设计」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "rest-design-ad76-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1045,8 +2306,60 @@ App::new()
     track: "REST实战",
     minutes: 14,
     blocks: [
-      { type: "text", title: "完整资源", body: "内存 Vec + Mutex 即可教学；生产换数据库。注意鉴权：所有 notes 路由包在需登录 scope。" },
-      { type: "code", title: "对应源码 · 列表与创建", lang: "rust", code: `#[derive(Clone, Serialize, Deserialize)]
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `内存 Vec + Mutex 即可教学；生产换数据库。注意鉴权：所有 notes 路由包在需登录 scope。
+
+为什么这一节重要：工坊同构的服务端形状。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「笔记 CRUD 实现」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "补充要点 1",
+        body: `打开「全栈工坊」用 demo@actix.dev / password123 走通同一流程。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「笔记 CRUD 实现」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「crud-notes」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是笔记 CRUD 实现？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `#[derive(Clone, Serialize, Deserialize)]
 struct Note { id: u64, title: String, body: String }
 
 struct Db { notes: Mutex<Vec<Note>>, seq: Mutex<u64> }
@@ -1062,23 +2375,48 @@ async fn create(db: web::Data<Db>, body: web::Json<CreateNote>) -> impl Responde
     let note = Note { id: *seq, title: body.title.clone(), body: body.body.clone() };
     db.notes.lock().unwrap().push(note.clone());
     HttpResponse::Created().json(note)
-}` },
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：笔记 CRUD 实现
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "state", title: "动手：内存 CRUD" },
-      { type: "tip", body: "打开「全栈工坊」用 demo@actix.dev / password123 走通同一流程。" },
-      { type: "quiz", questions: [
-              {
-                      "id": "cn1",
-                      "question": "创建成功状态码？",
-                      "options": [
-                              "200 也可但 201 更佳",
-                              "404",
-                              "500",
-                              "301"
-                      ],
-                      "answer": 0,
-                      "explain": "201 Created。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "crud-notes-2d08-1",
+            question: "关于「笔记 CRUD 实现」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "crud-notes-2d08-2",
+            question: "学习「笔记 CRUD 实现」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "crud-notes-2d08-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1087,30 +2425,103 @@ async fn create(db: web::Data<Db>, body: web::Json<CreateNote>) -> impl Responde
     summary: "拒绝脏数据。",
     level: "实战",
     track: "REST实战",
-    minutes: 10,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "边界检查", body: "长度、邮箱格式、必填字段。可用手写 if 或 validator crate。失败返回 400/422 + 字段错误信息。" },
-      { type: "code", title: "对应源码", lang: "rust", code: `fn validate_note(title: &str, body: &str) -> Result<(), &'static str> {
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `长度、邮箱格式、必填字段。可用手写 if 或 validator crate。失败返回 400/422 + 字段错误信息。
+
+为什么这一节重要：拒绝脏数据。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「输入校验」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「输入校验」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「validation」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是输入校验？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `fn validate_note(title: &str, body: &str) -> Result<(), &'static str> {
     if title.trim().is_empty() { return Err("title required"); }
     if title.len() > 120 { return Err("title too long"); }
     if body.len() > 10_000 { return Err("body too long"); }
     Ok(())
-}` },
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：输入校验
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "json-body", title: "动手：非法 JSON/字段" },
-      { type: "quiz", questions: [
-              {
-                      "id": "v1",
-                      "question": "校验失败常见？",
-                      "options": [
-                              "400/422",
-                              "200",
-                              "101",
-                              "206"
-                      ],
-                      "answer": 0,
-                      "explain": "客户端错误。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "validation-a617-1",
+            question: "关于「输入校验」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "validation-a617-2",
+            question: "学习「输入校验」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "validation-a617-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1119,10 +2530,57 @@ async fn create(db: web::Data<Db>, body: web::Json<CreateNote>) -> impl Responde
     summary: "列表 API 不一次倒完。",
     level: "实战",
     track: "REST实战",
-    minutes: 8,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "Query 分页", body: "page/size 或 cursor。返回 { items, total, page }。注意 size 上限防滥用。" },
-      { type: "code", title: "对应源码", lang: "rust", code: `#[derive(Deserialize)]
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `page/size 或 cursor。返回 { items, total, page }。注意 size 上限防滥用。
+
+为什么这一节重要：列表 API 不一次倒完。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「分页与过滤」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「分页与过滤」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「pagination」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是分页与过滤？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `#[derive(Deserialize)]
 struct PageQuery {
     page: Option<u32>,
     size: Option<u32>,
@@ -1133,22 +2591,48 @@ async fn list(q: web::Query<PageQuery>, db: web::Data<Db>) -> impl Responder {
     let size = q.size.unwrap_or(20).clamp(1, 100);
     // slice notes...
     web::Json(serde_json::json!({ "page": page, "size": size }))
-}` },
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：分页与过滤
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "path-query", title: "动手：page/size" },
-      { type: "quiz", questions: [
-              {
-                      "id": "pg1",
-                      "question": "size 为什么 clamp？",
-                      "options": [
-                              "好看",
-                              "防一次拉爆内存",
-                              "编译需要",
-                              "HTTP 禁止大"
-                      ],
-                      "answer": 1,
-                      "explain": "保护服务。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "pagination-fe7c-1",
+            question: "关于「分页与过滤」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "pagination-fe7c-2",
+            question: "学习「分页与过滤」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "pagination-fe7c-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1159,8 +2643,55 @@ async fn list(q: web::Query<PageQuery>, db: web::Data<Db>) -> impl Responder {
     track: "REST实战",
     minutes: 12,
     blocks: [
-      { type: "text", title: "Bearer 模式", body: "POST /auth/login → { token, user }；客户端 Authorization: Bearer …；服务端 map 存 token→user；logout 删 token。JWT 可无状态，教学先用不透明 token。" },
-      { type: "code", title: "对应源码 · 登录形状", lang: "rust", code: `#[post("/auth/login")]
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `POST /auth/login → { token, user }；客户端 Authorization: Bearer …；服务端 map 存 token→user；logout 删 token。JWT 可无状态，教学先用不透明 token。
+
+为什么这一节重要：登录发牌、请求带牌。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「Token 会话」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「Token 会话」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「token-session」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是Token 会话？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `#[post("/auth/login")]
 async fn login(body: web::Json<Login>) -> Result<HttpResponse> {
     // verify password...
     let token = uuid::Uuid::new_v4().to_string();
@@ -1169,22 +2700,48 @@ async fn login(body: web::Json<Login>) -> Result<HttpResponse> {
         "token": token,
         "user": { "email": body.email }
     })))
-}` },
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：Token 会话
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "auth-middleware", title: "动手：带 Token 访问 /me" },
-      { type: "quiz", questions: [
-              {
-                      "id": "ts1",
-                      "question": "Bearer 放在？",
-                      "options": [
-                              "Authorization 头",
-                              "仅 URL 永久",
-                              "必须 Cookie 名 x",
-                              "TLS 自动"
-                      ],
-                      "answer": 0,
-                      "explain": "Authorization。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "token-session-e5d2-1",
+            question: "关于「Token 会话」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "token-session-e5d2-2",
+            question: "学习「Token 会话」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "token-session-e5d2-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1193,10 +2750,57 @@ async fn login(body: web::Json<Login>) -> Result<HttpResponse> {
     summary: "可维护的 crate 布局。",
     level: "实战",
     track: "工程化",
-    minutes: 8,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "推荐目录", body: "src/main.rs 启动；src/routes/ 注册；src/handlers/；src/models/；src/middleware/；src/error.rs；tests/ 集成测试。" },
-      { type: "code", title: "树", lang: "rust", code: `src/
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `src/main.rs 启动；src/routes/ 注册；src/handlers/；src/models/；src/middleware/；src/error.rs；tests/ 集成测试。
+
+为什么这一节重要：可维护的 crate 布局。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「项目结构」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「项目结构」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「project-structure」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是项目结构？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `src/
   main.rs
   lib.rs
   error.rs
@@ -1204,22 +2808,48 @@ async fn login(body: web::Json<Login>) -> Result<HttpResponse> {
   handlers/{auth.rs,notes.rs}
   middleware/auth.rs
   routes.rs
-tests/api_notes.rs` },
+tests/api_notes.rs`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：项目结构
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "config", title: "动手：模块树" },
-      { type: "quiz", questions: [
-              {
-                      "id": "ps1",
-                      "question": "集成测试目录？",
-                      "options": [
-                              "tests/",
-                              "node_modules",
-                              "dist",
-                              "only src"
-                      ],
-                      "answer": 0,
-                      "explain": "tests/。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "project-structure-3ce2-1",
+            question: "关于「项目结构」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "project-structure-3ce2-2",
+            question: "学习「项目结构」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "project-structure-3ce2-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1230,8 +2860,55 @@ tests/api_notes.rs` },
     track: "工程化",
     minutes: 12,
     blocks: [
-      { type: "text", title: "不真开端口", body: "init_service + TestRequest 发调用，读状态码与 body。单元测 handler；集成测完整 App。" },
-      { type: "code", title: "对应源码 · 测试", lang: "rust", code: `#[actix_web::test]
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `init_service + TestRequest 发调用，读状态码与 body。单元测 handler；集成测完整 App。
+
+为什么这一节重要：actix_web::test 套件。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「测试 Actix 服务」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「测试 Actix 服务」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「testing」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是测试 Actix 服务？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `#[actix_web::test]
 async fn health_ok() {
     let app = actix_web::test::init_service(
         App::new().route("/health", web::get().to(|| async { "ok" }))
@@ -1239,22 +2916,48 @@ async fn health_ok() {
     let req = actix_web::test::TestRequest::get().uri("/health").to_request();
     let resp = actix_web::test::call_service(&app, req).await;
     assert!(resp.status().is_success());
-}` },
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：测试 Actix 服务
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "testing", title: "动手：断言状态码" },
-      { type: "quiz", questions: [
-              {
-                      "id": "t1",
-                      "question": "actix 测试常用？",
-                      "options": [
-                              "init_service + TestRequest",
-                              "仅 curl 手工",
-                              "selenium 必须",
-                              "禁止 async test"
-                      ],
-                      "answer": 0,
-                      "explain": "官方 test 工具。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "testing-ae2b-1",
+            question: "关于「测试 Actix 服务」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "testing-ae2b-2",
+            question: "学习「测试 Actix 服务」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "testing-ae2b-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1263,10 +2966,57 @@ async fn health_ok() {
     summary: "12-factor：端口、数据库 URL。",
     level: "实战",
     track: "工程化",
-    minutes: 8,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "环境注入", body: "std::env::var(\"PORT\")、dotenvy 加载 .env。切勿把密钥写进仓库。" },
-      { type: "code", title: "对应源码", lang: "rust", code: `let port: u16 = std::env::var("PORT")
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `std::env::var(\\"PORT\\")、dotenvy 加载 .env。切勿把密钥写进仓库。
+
+为什么这一节重要：12-factor：端口、数据库 URL。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「配置与环境变量」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「配置与环境变量」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「config-env」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是配置与环境变量？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `let port: u16 = std::env::var("PORT")
     .ok()
     .and_then(|s| s.parse().ok())
     .unwrap_or(8080);
@@ -1274,22 +3024,48 @@ let bind = format!("0.0.0.0:{port}");
 HttpServer::new(|| App::new())
     .bind(bind)?
     .run()
-    .await` },
+    .await`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：配置与环境变量
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "config", title: "动手：PORT 环境变量" },
-      { type: "quiz", questions: [
-              {
-                      "id": "ce1",
-                      "question": "密钥应放？",
-                      "options": [
-                              "Git 明文",
-                              "环境变量/密钥管理",
-                              "前端 localStorage 永久",
-                              "README"
-                      ],
-                      "answer": 1,
-                      "explain": "环境与保险柜。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "config-env-8956-1",
+            question: "关于「配置与环境变量」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "config-env-8956-2",
+            question: "学习「配置与环境变量」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "config-env-8956-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1298,26 +3074,99 @@ HttpServer::new(|| App::new())
     summary: "请求 ID、结构化日志。",
     level: "实战",
     track: "工程化",
-    minutes: 8,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "生产可读性", body: "Logger 中间件 + tracing 生态；为请求生成 request-id 响应头。错误日志带路径与 user id（勿记密码）。" },
-      { type: "code", title: "对应源码", lang: "rust", code: `env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
-App::new().wrap(middleware::Logger::new("%a %{User-Agent}i %s %b %T"))` },
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `Logger 中间件 + tracing 生态；为请求生成 request-id 响应头。错误日志带路径与 user id（勿记密码）。
+
+为什么这一节重要：请求 ID、结构化日志。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「日志与可观测」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「日志与可观测」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「logging-obs」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是日志与可观测？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+App::new().wrap(middleware::Logger::new("%a %{User-Agent}i %s %b %T"))`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：日志与可观测
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "logging", title: "动手：RUST_LOG" },
-      { type: "quiz", questions: [
-              {
-                      "id": "lo1",
-                      "question": "默认日志过滤环境变量常？",
-                      "options": [
-                              "RUST_LOG",
-                              "PATH",
-                              "HOME",
-                              "NODE_ENV"
-                      ],
-                      "answer": 0,
-                      "explain": "RUST_LOG。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "logging-obs-a4d3-1",
+            question: "关于「日志与可观测」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "logging-obs-a4d3-2",
+            question: "学习「日志与可观测」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "logging-obs-a4d3-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1326,10 +3175,57 @@ App::new().wrap(middleware::Logger::new("%a %{User-Agent}i %s %b %T"))` },
     summary: "release、反向代理、容器。",
     level: "实战",
     track: "工程化",
-    minutes: 10,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "上线清单", body: "cargo build --release；反向代理 TLS；健康检查 /health；优雅关闭；资源限制。Docker 多阶段构建减小镜像。" },
-      { type: "code", title: "Dockerfile 片段", lang: "rust", code: `FROM rust:1.83 as build
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `cargo build --release；反向代理 TLS；健康检查 /health；优雅关闭；资源限制。Docker 多阶段构建减小镜像。
+
+为什么这一节重要：release、反向代理、容器。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「构建与部署」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「构建与部署」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「deploy」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是构建与部署？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `FROM rust:1.83 as build
 WORKDIR /app
 COPY . .
 RUN cargo build --release
@@ -1338,22 +3234,48 @@ FROM debian:bookworm-slim
 COPY --from=build /app/target/release/learning-api /usr/local/bin/
 ENV PORT=8080
 EXPOSE 8080
-CMD ["learning-api"]` },
+CMD ["learning-api"]`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：构建与部署
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "httpserver", title: "动手：release 思维模型" },
-      { type: "quiz", questions: [
-              {
-                      "id": "dp1",
-                      "question": "生产构建？",
-                      "options": [
-                              "cargo build --release",
-                              "cargo run only",
-                              "npm start",
-                              "rustc 单文件必须"
-                      ],
-                      "answer": 0,
-                      "explain": "优化二进制。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "deploy-078f-1",
+            question: "关于「构建与部署」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "deploy-078f-2",
+            question: "学习「构建与部署」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "deploy-078f-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1362,10 +3284,57 @@ CMD ["learning-api"]` },
     summary: "大文件与 chunk。",
     level: "进阶",
     track: "进阶模式",
-    minutes: 8,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "Body::from_stream", body: "对大文件/生成器使用流，降低内存峰值。SSE 也可基于流。" },
-      { type: "code", title: "对应源码", lang: "rust", code: `use actix_web::{HttpResponse, web};
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `对大文件/生成器使用流，降低内存峰值。SSE 也可基于流。
+
+为什么这一节重要：大文件与 chunk。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「流式响应」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「流式响应」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「streaming」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是流式响应？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `use actix_web::{HttpResponse, web};
 use futures_util::stream;
 
 async fn stream_hello() -> HttpResponse {
@@ -1374,22 +3343,48 @@ async fn stream_hello() -> HttpResponse {
         Ok(web::Bytes::from("stream")),
     ]);
     HttpResponse::Ok().content_type("text/plain").streaming(s)
-}` },
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：流式响应
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "streaming", title: "动手：分块输出" },
-      { type: "quiz", questions: [
-              {
-                      "id": "st1",
-                      "question": "流式好处？",
-                      "options": [
-                              "更大内存",
-                              "边生成边发送",
-                              "更慢必现",
-                              "禁用 HTTP/1"
-                      ],
-                      "answer": 1,
-                      "explain": "控内存。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "streaming-abb0-1",
+            question: "关于「流式响应」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "streaming-abb0-2",
+            question: "学习「流式响应」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "streaming-abb0-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1398,27 +3393,100 @@ async fn stream_hello() -> HttpResponse {
     summary: "actix-web 升级连接。",
     level: "进阶",
     track: "进阶模式",
-    minutes: 10,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "实时通道", body: "HTTP 升级为 WS 后双向推送。聊天、协作、游戏状态。actix 生态有 actix-ws / 原生 actor 方案。" },
-      { type: "code", title: "对应源码 · 概念", lang: "rust", code: `// 路由注册 WS 升级 handler
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `HTTP 升级为 WS 后双向推送。聊天、协作、游戏状态。actix 生态有 actix-ws / 原生 actor 方案。
+
+为什么这一节重要：actix-web 升级连接。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「WebSocket 入门」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「WebSocket 入门」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「websocket」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是WebSocket 入门？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `// 路由注册 WS 升级 handler
 // 读 Client 消息，写 Server 消息
-// 心跳 ping/pong 保活` },
+// 心跳 ping/pong 保活`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：WebSocket 入门
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "websocket", title: "动手：帧收发示意" },
-      { type: "quiz", questions: [
-              {
-                      "id": "ws1",
-                      "question": "WebSocket 先？",
-                      "options": [
-                              "UDP 广播",
-                              "HTTP 升级",
-                              "仅 SMTP",
-                              "FTP"
-                      ],
-                      "answer": 1,
-                      "explain": "Upgrade。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "websocket-bf56-1",
+            question: "关于「WebSocket 入门」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "websocket-bf56-2",
+            question: "学习「WebSocket 入门」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "websocket-bf56-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1427,26 +3495,99 @@ async fn stream_hello() -> HttpResponse {
     summary: "Actix 名字的由来。",
     level: "进阶",
     track: "进阶模式",
-    minutes: 10,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "消息传递并发", body: "Actor 邮箱串行处理消息，避免共享可变状态的锁心智。actix 框架本身；actix-web 4 更偏 tokio 服务，但 Actor 模型仍可在业务中用。" },
-      { type: "code", title: "伪代码", lang: "rust", code: `// Actor 收 CreateNote 消息 → 更新内部 Vec
-// Handler 只 send 消息，不直接锁全局` },
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `Actor 邮箱串行处理消息，避免共享可变状态的锁心智。actix 框架本身；actix-web 4 更偏 tokio 服务，但 Actor 模型仍可在业务中用。
+
+为什么这一节重要：Actix 名字的由来。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「Actor 直觉」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「Actor 直觉」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「actors」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是Actor 直觉？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `// Actor 收 CreateNote 消息 → 更新内部 Vec
+// Handler 只 send 消息，不直接锁全局`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：Actor 直觉
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "actor", title: "动手：邮箱排队" },
-      { type: "quiz", questions: [
-              {
-                      "id": "ac1",
-                      "question": "Actor 通信？",
-                      "options": [
-                              "共享裸锁为主",
-                              "消息传递",
-                              "仅全局 static mut",
-                              "禁止并发"
-                      ],
-                      "answer": 1,
-                      "explain": "消息。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "actors-67ef-1",
+            question: "关于「Actor 直觉」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "actors-67ef-2",
+            question: "学习「Actor 直觉」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "actors-67ef-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1455,24 +3596,101 @@ async fn stream_hello() -> HttpResponse {
     summary: "零拷贝、连接池、少分配。",
     level: "进阶",
     track: "进阶模式",
-    minutes: 8,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "清单", body: "release 构建；连接池复用 DB；避免 handler 内大克隆；压缩中间件按需；水平扩展多实例 + 负载均衡。" },
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `release 构建；连接池复用 DB；避免 handler 内大克隆；压缩中间件按需；水平扩展多实例 + 负载均衡。
+
+为什么这一节重要：零拷贝、连接池、少分配。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「性能要点」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「性能要点」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「performance」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是性能要点？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "最小示例",
+        lang: "rust",
+        code: `// 性能要点
+fn main() {
+    println!("demo: performance");
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：性能要点
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "httpserver", title: "动手：worker 与吞吐" },
-      { type: "quiz", questions: [
-              {
-                      "id": "pf1",
-                      "question": "DB 访问推荐？",
-                      "options": [
-                              "每次新建 TCP 无池",
-                              "连接池",
-                              "前端直连 DB",
-                              "同步阻塞全局"
-                      ],
-                      "answer": 1,
-                      "explain": "池化。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "performance-c05f-1",
+            question: "关于「性能要点」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "performance-c05f-2",
+            question: "学习「性能要点」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "performance-c05f-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1481,27 +3699,100 @@ async fn stream_hello() -> HttpResponse {
     summary: "OWASP 速通。",
     level: "进阶",
     track: "进阶模式",
-    minutes: 10,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "必做", body: "参数化查询防注入；哈希密码（argon2）；HTTPS；CORS 白名单；限制 body 大小；鉴权默认拒绝；不在日志打密钥。" },
-      { type: "code", title: "对应源码 · body limit", lang: "rust", code: `App::new().app_data(
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `参数化查询防注入；哈希密码（argon2）；HTTPS；CORS 白名单；限制 body 大小；鉴权默认拒绝；不在日志打密钥。
+
+为什么这一节重要：OWASP 速通。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「Web 安全基础」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「Web 安全基础」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「security」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是Web 安全基础？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `App::new().app_data(
     web::JsonConfig::default().limit(32 * 1024)
-)` },
+)`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：Web 安全基础
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "auth-middleware", title: "动手：拒绝无 token" },
-      { type: "quiz", questions: [
-              {
-                      "id": "sec1",
-                      "question": "密码存储？",
-                      "options": [
-                              "明文",
-                              "可逆加密即可",
-                              "慢哈希 (argon2/bcrypt)",
-                              "仅 Base64"
-                      ],
-                      "answer": 2,
-                      "explain": "单向慢哈希。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "security-e91e-1",
+            question: "关于「Web 安全基础」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "security-e91e-2",
+            question: "学习「Web 安全基础」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "security-e91e-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1510,24 +3801,101 @@ async fn stream_hello() -> HttpResponse {
     summary: "用一条请求串起知识点。",
     level: "进阶",
     track: "进阶模式",
-    minutes: 10,
+    minutes: 12,
     blocks: [
-      { type: "text", title: "故事线", body: "客户端 POST /api/notes → 中间件日志/CORS/鉴权 → 提取 Json + Data<Db> → 业务校验 → 写库 → 201 JSON。对比：所有权保证无数据竞争；Result 驱动错误码；async 提高 IO 并发。" },
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `客户端 POST /api/notes → 中间件日志/CORS/鉴权 → 提取 Json + Data<Db> → 业务校验 → 写库 → 201 JSON。对比：所有权保证无数据竞争；Result 驱动错误码；async 提高 IO 并发。
+
+为什么这一节重要：用一条请求串起知识点。不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「面试串讲」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「面试串讲」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「interview」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是面试串讲？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "最小示例",
+        lang: "rust",
+        code: `// 面试串讲
+fn main() {
+    println!("demo: interview");
+}`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：面试串讲
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "middleware", title: "动手：完整链路回放" },
-      { type: "quiz", questions: [
-              {
-                      "id": "iv1",
-                      "question": "Actix handler 默认？",
-                      "options": [
-                              "多线程阻塞模型 only",
-                              "async 可挂起 IO",
-                              "仅同步",
-                              "必须 Actor"
-                      ],
-                      "answer": 1,
-                      "explain": "异步。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "interview-0498-1",
+            question: "关于「面试串讲」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "interview-0498-2",
+            question: "学习「面试串讲」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "interview-0498-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1537,27 +3905,100 @@ async fn stream_hello() -> HttpResponse {
     level: "进阶",
     track: "官方对齐",
     format: "reference",
-    minutes: 8,
+    minutes: 12,
     official: "/actix-web/docs/application/",
     blocks: [
-      { type: "text", title: "App 配置全解", body: "configure / app_data / wrap 清单。本课为参考卡片，对照 actix.rs 文档加深。结业不强制掌握每一张参考卡。" },
-      { type: "code", title: "入口", lang: "rust", code: `// 详见 https://actix.rs/actix-web/docs/application/
-// 建议：实现一个最小例子后回来对照选项表。` },
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `configure / app_data / wrap 清单。本课为参考卡片，对照 actix.rs 文档加深。结业不强制掌握每一张参考卡。
+
+为什么这一节重要：configure / app_data / wrap 清单不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「App 配置全解」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「App 配置全解」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「official-app」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是App 配置全解？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `// 详见 https://actix.rs/actix-web/docs/application/
+// 建议：实现一个最小例子后回来对照选项表。`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：App 配置全解
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "hello-world", title: "对照：最小服务" },
-      { type: "quiz", questions: [
-              {
-                      "id": "official-appq",
-                      "question": "本课定位？",
-                      "options": [
-                              "可选修参考",
-                              "必须删库",
-                              "前端课",
-                              "替换 Rust"
-                      ],
-                      "answer": 0,
-                      "explain": "参考卡片。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "official-app-fc8f-1",
+            question: "关于「App 配置全解」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "official-app-fc8f-2",
+            question: "学习「App 配置全解」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "official-app-fc8f-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1567,27 +4008,100 @@ async fn stream_hello() -> HttpResponse {
     level: "进阶",
     track: "官方对齐",
     format: "reference",
-    minutes: 8,
+    minutes: 12,
     official: "/actix-web/docs/server/",
     blocks: [
-      { type: "text", title: "服务器选项", body: "workers / backlog / TLS 入口。本课为参考卡片，对照 actix.rs 文档加深。结业不强制掌握每一张参考卡。" },
-      { type: "code", title: "入口", lang: "rust", code: `// 详见 https://actix.rs/actix-web/docs/server/
-// 建议：实现一个最小例子后回来对照选项表。` },
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `workers / backlog / TLS 入口。本课为参考卡片，对照 actix.rs 文档加深。结业不强制掌握每一张参考卡。
+
+为什么这一节重要：workers / backlog / TLS 入口不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「服务器选项」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「服务器选项」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「official-server」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是服务器选项？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `// 详见 https://actix.rs/actix-web/docs/server/
+// 建议：实现一个最小例子后回来对照选项表。`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：服务器选项
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "hello-world", title: "对照：最小服务" },
-      { type: "quiz", questions: [
-              {
-                      "id": "official-serverq",
-                      "question": "本课定位？",
-                      "options": [
-                              "可选修参考",
-                              "必须删库",
-                              "前端课",
-                              "替换 Rust"
-                      ],
-                      "answer": 0,
-                      "explain": "参考卡片。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "official-server-15f4-1",
+            question: "关于「服务器选项」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "official-server-15f4-2",
+            question: "学习「服务器选项」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "official-server-15f4-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1597,27 +4111,100 @@ async fn stream_hello() -> HttpResponse {
     level: "进阶",
     track: "官方对齐",
     format: "reference",
-    minutes: 8,
+    minutes: 12,
     official: "/actix-web/docs/extractors/",
     blocks: [
-      { type: "text", title: "提取器官方列表", body: "Bytes / Payload / Session…。本课为参考卡片，对照 actix.rs 文档加深。结业不强制掌握每一张参考卡。" },
-      { type: "code", title: "入口", lang: "rust", code: `// 详见 https://actix.rs/actix-web/docs/extractors/
-// 建议：实现一个最小例子后回来对照选项表。` },
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `Bytes / Payload / Session…。本课为参考卡片，对照 actix.rs 文档加深。结业不强制掌握每一张参考卡。
+
+为什么这一节重要：Bytes / Payload / Session…不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「提取器官方列表」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「提取器官方列表」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「official-extract」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是提取器官方列表？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `// 详见 https://actix.rs/actix-web/docs/extractors/
+// 建议：实现一个最小例子后回来对照选项表。`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：提取器官方列表
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "hello-world", title: "对照：最小服务" },
-      { type: "quiz", questions: [
-              {
-                      "id": "official-extractq",
-                      "question": "本课定位？",
-                      "options": [
-                              "可选修参考",
-                              "必须删库",
-                              "前端课",
-                              "替换 Rust"
-                      ],
-                      "answer": 0,
-                      "explain": "参考卡片。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "official-extract-16a5-1",
+            question: "关于「提取器官方列表」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "official-extract-16a5-2",
+            question: "学习「提取器官方列表」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "official-extract-16a5-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1627,27 +4214,100 @@ async fn stream_hello() -> HttpResponse {
     level: "进阶",
     track: "官方对齐",
     format: "reference",
-    minutes: 8,
+    minutes: 12,
     official: "/actix-web/docs/middleware/",
     blocks: [
-      { type: "text", title: "内置中间件", body: "ErrorHandlers / NormalizePath…。本课为参考卡片，对照 actix.rs 文档加深。结业不强制掌握每一张参考卡。" },
-      { type: "code", title: "入口", lang: "rust", code: `// 详见 https://actix.rs/actix-web/docs/middleware/
-// 建议：实现一个最小例子后回来对照选项表。` },
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `ErrorHandlers / NormalizePath…。本课为参考卡片，对照 actix.rs 文档加深。结业不强制掌握每一张参考卡。
+
+为什么这一节重要：ErrorHandlers / NormalizePath…不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「内置中间件」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「内置中间件」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「official-middleware」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是内置中间件？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `// 详见 https://actix.rs/actix-web/docs/middleware/
+// 建议：实现一个最小例子后回来对照选项表。`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：内置中间件
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "hello-world", title: "对照：最小服务" },
-      { type: "quiz", questions: [
-              {
-                      "id": "official-middlewareq",
-                      "question": "本课定位？",
-                      "options": [
-                              "可选修参考",
-                              "必须删库",
-                              "前端课",
-                              "替换 Rust"
-                      ],
-                      "answer": 0,
-                      "explain": "参考卡片。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "official-middleware-f92d-1",
+            question: "关于「内置中间件」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "official-middleware-f92d-2",
+            question: "学习「内置中间件」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "official-middleware-f92d-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1657,27 +4317,100 @@ async fn stream_hello() -> HttpResponse {
     level: "进阶",
     track: "官方对齐",
     format: "reference",
-    minutes: 8,
+    minutes: 12,
     official: "/actix-web/docs/static-files/",
     blocks: [
-      { type: "text", title: "静态文件", body: "actix-files 托管前端。本课为参考卡片，对照 actix.rs 文档加深。结业不强制掌握每一张参考卡。" },
-      { type: "code", title: "入口", lang: "rust", code: `// 详见 https://actix.rs/actix-web/docs/static-files/
-// 建议：实现一个最小例子后回来对照选项表。` },
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `actix-files 托管前端。本课为参考卡片，对照 actix.rs 文档加深。结业不强制掌握每一张参考卡。
+
+为什么这一节重要：actix-files 托管前端不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「静态文件」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「静态文件」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「official-static」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是静态文件？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `// 详见 https://actix.rs/actix-web/docs/static-files/
+// 建议：实现一个最小例子后回来对照选项表。`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：静态文件
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "hello-world", title: "对照：最小服务" },
-      { type: "quiz", questions: [
-              {
-                      "id": "official-staticq",
-                      "question": "本课定位？",
-                      "options": [
-                              "可选修参考",
-                              "必须删库",
-                              "前端课",
-                              "替换 Rust"
-                      ],
-                      "answer": 0,
-                      "explain": "参考卡片。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "official-static-7bf1-1",
+            question: "关于「静态文件」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "official-static-7bf1-2",
+            question: "学习「静态文件」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "official-static-7bf1-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
   {
@@ -1687,27 +4420,100 @@ async fn stream_hello() -> HttpResponse {
     level: "进阶",
     track: "官方对齐",
     format: "reference",
-    minutes: 8,
+    minutes: 12,
     official: "/actix-web/docs/server/",
     blocks: [
-      { type: "text", title: "HTTP/2 与 TLS", body: "rustls 集成要点。本课为参考卡片，对照 actix.rs 文档加深。结业不强制掌握每一张参考卡。" },
-      { type: "code", title: "入口", lang: "rust", code: `// 详见 https://actix.rs/actix-web/docs/server/
-// 建议：实现一个最小例子后回来对照选项表。` },
+      {
+        type: "text",
+        title: "概念深讲",
+        body: `rustls 集成要点。本课为参考卡片，对照 actix.rs 文档加深。结业不强制掌握每一张参考卡。
+
+为什么这一节重要：rustls 集成要点不只是名词，而是后续所有实践的前提。学习时请同时抓住三件事：① 它解决什么问题；② 核心机制/API 是什么；③ 什么情况下不该用、常见坑是什么。`,
+      },
+      {
+        type: "text",
+        title: "机制与关键点",
+        body: `围绕「HTTP/2 与 TLS」，建议你用下面清单自检是否真懂：
+· 输入/前置条件是什么？
+· 输出/副作用是什么？
+· 与相邻概念如何区分？（容易混淆的一对一对比）
+· 复杂度或性能上的直觉（是否 O(n)、是否阻塞、是否有状态）
+· 在真实项目里通常放在哪一层（入口、中间件、数据层、UI、运维）？
+
+把每个点用自己的话写进笔记；能讲给别人听，才算过关。`,
+      },
+      {
+        type: "text",
+        title: "实践步骤",
+        body: `1. 只读官方/权威文档里与「HTTP/2 与 TLS」直接相关的一小节，不要发散。
+2. 在本机或本站 Demo 里最小复现：只验证一个行为。
+3. 故意制造一个错误（错参数、错顺序、错环境），观察报错信息。
+4. 改对后再总结：「正确做法 / 错误做法 / 如何排查」三行笔记。
+5. 做本节测验；错题收入错题本，隔天再测一次。`,
+      },
+      {
+        type: "text",
+        title: "踩坑与排障",
+        body: `· 文档示例能跑、自己环境不能：先对齐版本与配置，再怀疑代码。
+· 「好像懂了」但默写不出来：回去做最小复现，而不是再看一遍视频。
+· 多个概念一起崩：二分法缩小范围（注释一半配置/代码）。
+· 与「official-http2」相关的问题，优先查官方 FAQ 与 issue 里的 breaking change。
+· 生产环境多一项：可观测性（日志/指标）和回滚策略。`,
+      },
+      {
+        type: "text",
+        title: "面试 / 复盘一问",
+        body: `请用 90 秒回答：什么是HTTP/2 与 TLS？它解决什么问题？举一个你会在项目里使用（或拒绝使用）的场景，并说明取舍。
+
+加分项：对比一个替代方案，并说出性能、复杂度或可维护性上的差异。`,
+      },
+      {
+        type: "code",
+        title: "对应源码",
+        lang: "rust",
+        code: `// 详见 https://actix.rs/actix-web/docs/server/
+// 建议：实现一个最小例子后回来对照选项表。`,
+      },
+      {
+        type: "code",
+        title: "自检清单（注释版）",
+        lang: "text",
+        code: `// [ ] 能用自己的话解释：HTTP/2 与 TLS
+// [ ] 能默写最小示例
+// [ ] 能说出 2 个踩坑
+// [ ] 能在项目场景里决定用/不用`,
+      },
       { type: "demo", kind: "hello-world", title: "对照：最小服务" },
-      { type: "quiz", questions: [
-              {
-                      "id": "official-http2q",
-                      "question": "本课定位？",
-                      "options": [
-                              "可选修参考",
-                              "必须删库",
-                              "前端课",
-                              "替换 Rust"
-                      ],
-                      "answer": 0,
-                      "explain": "参考卡片。"
-              }
-      ] },
+      {
+        type: "tip",
+        body: `先求「能复现 + 能讲清」，再求「背全 API」。本课 Demo 与测验就是你的验收标准。`,
+      },
+      {
+        type: "quiz",
+        questions: [
+          {
+            id: "official-http2-a571-1",
+            question: "关于「HTTP/2 与 TLS」，最准确的理解是？",
+            options: ["只需要记住名词即可", "要同时理解问题、机制、适用边界与常见坑", "与实践无关", "只能在考试中使用"],
+            answer: 1,
+            explain: "概念 + 机制 + 边界 + 排障，才是可迁移的掌握。",
+          },
+          {
+            id: "official-http2-a571-2",
+            question: "学习「HTTP/2 与 TLS」时，优先行动是？",
+            options: ["一次看完所有周边主题", "最小复现一个行为，再扩展", "只收藏文档不动手", "跳过报错信息"],
+            answer: 1,
+            explain: "最小复现建立反馈回路。",
+          },
+          {
+            id: "official-http2-a571-3",
+            question: "遇到「示例能跑、自己环境不能」时，你应先？",
+            options: ["重写整个项目", "对齐版本/配置并阅读完整报错", "忽略错误继续下一步", "删除全部依赖"],
+            answer: 1,
+            explain: "环境与版本是第一怀疑对象。",
+          },
+        ],
+      },
     ],
   },
 ];
